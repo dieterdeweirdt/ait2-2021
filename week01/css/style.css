@@ -1,0 +1,9 @@
+.rainbow {
+    display: flex;
+    flex-wrap: wrap;
+}
+.block {
+    display: block;
+    width: 5px; 
+    height: 10px;
+}
