@@ -1,4 +1,24 @@
-<!DOCTYPE html>
+<?php 
+setlocale(LC_ALL, 'nl_BE');
+
+require 'includes/db.php';
+
+$search = $_GET['search_string'] ?? '';
+
+$sql = 'SELECT *
+FROM `message` 
+INNER JOIN `users` ON message.user_id = `users`.`user_id`
+WHERE `message`.`message` LIKE :search
+ORDER BY `created_on` DESC 
+LIMIT 25';
+
+$stmnt = $db->prepare($sql);
+$stmnt->execute(
+    [ ':search' => '%' . $search . '%' ]
+);
+$messages = $stmnt->fetchAll();
+
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,35 +29,35 @@
 <body>
 <div class="container">
     <div class="messages">
-        <form>
+        <form method="POST" action="api/add_tweet.php" enctype="multipart/form-data">
             <div class="message message-new">
             
                 <div class="avatar">JD</div>
 
                 <div class="content">
                     <textarea name="tweet"></textarea>
+                    <input type="file" name="photo">
                     <button type="submit">Tweet</button>
                 </div>
             </div>
         </form>
-        <div class="message">
-            <div class="avatar"><img src="https://picsum.photos/id/1005/100/100"></div>
-            <div class="content">
-                <div class="info"><a href="#">Dieter De Weirdt</a> &bull; @deweirdt &bull; Donderdag 1 oktober 2020 11:20</div>
-                <div class="tweet">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae incidunt ipsam distinctio quam, quibusdam iure natus consequatur asperiores, expedita eos cumque eligendi sed perferendis voluptates culpa sunt, mollitia ipsa sapiente!</div>
+
+        <form>
+            <div class="search">
+                <div class="content">
+                    
+                    <input value="<?= $search; ?>" name="search_string" placeholder="Zoekterm">
+                    <button type="submit">Zoeken</button>
+                </div>
             </div>
-        </div>
-        <div class="message">
-            <div class="avatar"><img src="https://picsum.photos/id/237/100/100"></div>
-            <div class="content">
-                <div class="info"><a href="#">John Doe</a> &bull; @doe &bull; Donderdag 1 oktober 2020 11:03</div>
-                <div class="tweet">Hi</div>
-            </div>
-        </div>
+        </form>
+
+        <?php foreach($messages as $message) {
+            include 'views/message.php';
+        } ?>
     </div>
 
 </div>
-
 
 </body>
 </html>
