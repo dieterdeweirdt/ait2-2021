@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watchsass": "sass --watch ./admin/css/main.scss:./admin/css/main.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
