@@ -26,11 +26,11 @@
         </div>
         <div class="col-4 text-right">
             <a href="edit_page.php?page_id=<?= $page['page_id']; ?>" class="btn btn-primary">Bewerk</a>
-            <a href="delete_page.php?page_id=<?= $page['page_id']; ?>" class="btn btn-danger">Verwijder</a>
+            <a href="delete_page.php?page_id=<?= $page['page_id']; ?>" onclick="return confirm('Ben je zeker?');" class="btn btn-danger">Verwijder</a>
         </div>
     </div>
 <?php endforeach; ?>
-<a href="#" class="btn btn-success">Pagina toevoegen</a>
+<a href="edit_page.php" class="btn btn-success">Pagina toevoegen</a>
 </div>
     
     
