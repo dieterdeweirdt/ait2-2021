@@ -1,6 +1,18 @@
 <?php
     require 'db.php';
 
+session_start();
+$user_id = $_SESSION['user_id'] ?? 0;
+
+if($user_id) {
+    //SQL om all info op te vragen van de huidige page_id ($v_id)
+    $sql = 'SELECT * FROM `users` WHERE `user_id` = :p_id';
+    $pdo_statement = $db->prepare($sql);
+    $pdo_statement->execute( [ ':p_id' => $user_id ] );
+    $user = $pdo_statement->fetchObject();
+}
+
+
     $v_id = $_GET['q_id'] ?? 1;
 
     //SQL om page_id, slug en name op te vragen van alle paginas
@@ -34,12 +46,18 @@
 </head>
 <body>
     <div class="container">
+        <?php if ($user_id ) : ?>
+            Hallo <?= $user->firstname; ?>, <a href="logoff.php">Uitloggen</a>
+        <?php else : ?>
+            <a href="login.php">Inloggen</a> <a href="register.php">Registreren</a>
+        <?php endif; ?>
     <nav>
         <?php
         foreach($all_pages as $page) {
             echo '<a href="index.php?q_id=' . $page['page_id'] . '">' . $page['name'] . '</a>';
         }
         ?>
+        
     </nav>
     <?php
     //Laad de view in
