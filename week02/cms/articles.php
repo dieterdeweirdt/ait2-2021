@@ -1,7 +1,6 @@
 <?php
+require 'app.php';
 
-require 'db.php';
-require 'models/BaseModel.php';
-require 'models/Article.php';
+$articles = Article::getAll();
 
-print_r( Article::getAll() );
+print_r( $articles );
