@@ -1,11 +1,8 @@
 <?php
-    require '../db.php';
+     require '../app.php';
 
     //SQL om page_id, slug en name op te vragen van alle paginas
-    $sql = 'SELECT * FROM `pages` ORDER BY `sort_order`';
-    $pdo_statement = $db->prepare($sql);
-    $pdo_statement->execute();
-    $all_pages = $pdo_statement->fetchAll();
+    $all_pages = Page::getAll();
 
     
 ?><!DOCTYPE html>

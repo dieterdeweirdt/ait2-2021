@@ -1,58 +1,25 @@
 <?php
-    require '../db.php';
+         require '../app.php';
+
+
     $page_id = $_GET['page_id'] ?? 0;
    
     if( isset($_POST['update']) ) {
-        
-        //waarden uit post halen
-        $slug = $_POST['slug'] ?? '';
-        $name = $_POST['name'] ?? '';
-        $content = $_POST['content'] ?? '';
-        $template = $_POST['template'] ?? 'page';
-        
-        if( $page_id ) {
-            //Update sql schrijven
-            $sql = 'UPDATE `pages` 
-                    SET `slug` = :slug, `name` = :name, `content` = :content, `template` = :template
-                    WHERE `page_id` = :page_id ';
-            $update_statement = $db->prepare($sql);
-            $update_statement->execute(
-                [
-                    ':slug' => $slug,
-                    ':name' => $name,
-                    ':content' => $content,
-                    ':template' => $template,
-                    ':page_id' => $page_id,
-                ]
-            );
-        } else {
-            //INSERT ITEM
-            $sql = 'INSERT INTO `pages` (`slug`, `name`, `content`, `template`)
-                    VALUES (:slug, :name, :content, :template)';
-            $insert_statement = $db->prepare($sql);
-            $insert_statement->execute(
-                [
-                    ':slug' => $slug,
-                    ':name' => $name,
-                    ':content' => $content,
-                    ':template' => $template,
-                ]
-            );
 
-            $new_id = $db->lastInsertId();
-
-            header ( 'location: edit_page.php?page_id=' . $new_id);
-            die();
-        }
+        $new_test_page = new Page();
+        $new_test_page->page_id = $page_id;
+        $new_test_page->slug = $_POST['slug'] ?? '';
+        $new_test_page->name = $_POST['name'] ?? '';
+        $new_test_page->title = $_POST['title'] ?? '';
+        $new_test_page->content = $_POST['content'] ?? '';
+        $new_test_page->template = $_POST['template'] ?? 'page';
+        $new_test_page->save();
         
     }
 
     if ( $page_id ) {
         //SQL om page_id, slug en name op te vragen van alle paginas
-        $sql = 'SELECT * FROM `pages` WHERE `page_id` = :page_id';
-        $pdo_statement = $db->prepare($sql);
-        $pdo_statement->execute( [ ':page_id' => $page_id ] );
-        $page = $pdo_statement->fetchObject();
+        $page = Page::getById($page_id);
     } 
     
 

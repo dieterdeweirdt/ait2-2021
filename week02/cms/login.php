@@ -1,23 +1,15 @@
 <?php
-session_start();
-include 'db.php';
+include 'app.php';
 
 if( isset($_POST['login'] ) ) {
 
-    $sql = 'SELECT * from `users` WHERE `email` = :email';
-    $pdo_statement = $db->prepare($sql);
-    $pdo_statement->execute( [ 
-    ':email' => $_POST['email'] ?? '',
-    ] );
-    $user = $pdo_statement->fetchObject();
+    $user = User::getUserByEmail( $_POST['email'] );
     
     //controle of er een user inzit
     if( isset($user->email) ) {
         //controle of wachtwoord juist is
         if( password_verify ( $_POST['password'], $user->password) )
         {
-            echo 'Hallo ' . $user->firstname;
-            //TODO toevoegen aan sessie.
             $_SESSION['user_id'] = $user->user_id;
             header('location: index.php');
 

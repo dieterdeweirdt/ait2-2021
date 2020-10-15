@@ -1,8 +1,6 @@
 <?php
 
-include 'db.php';
-
-print_r($_POST);
+include 'app.php';
 
 if( isset($_POST['register'] ) ) {
 

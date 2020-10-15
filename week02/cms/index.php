@@ -1,31 +1,13 @@
 <?php
-    require 'db.php';
+    require 'app.php';
 
-session_start();
-$user_id = $_SESSION['user_id'] ?? 0;
-
-if($user_id) {
-    //SQL om all info op te vragen van de huidige page_id ($v_id)
-    $sql = 'SELECT * FROM `users` WHERE `user_id` = :p_id';
-    $pdo_statement = $db->prepare($sql);
-    $pdo_statement->execute( [ ':p_id' => $user_id ] );
-    $user = $pdo_statement->fetchObject();
-}
-
-
+    //Pagina ophalen adhv huidige page_id ($v_id)
     $v_id = $_GET['q_id'] ?? 1;
+    $current_page = Page::getById($v_id);
+    
+    $all_pages = Page::getAll();
 
-    //SQL om page_id, slug en name op te vragen van alle paginas
-    $sql = 'SELECT `page_id`, `slug`, `name` FROM `pages` ORDER BY `sort_order`';
-    $pdo_statement = $db->prepare($sql);
-    $pdo_statement->execute();
-    $all_pages = $pdo_statement->fetchAll();
-
-    //SQL om all info op te vragen van de huidige page_id ($v_id)
-    $sql = 'SELECT * FROM `pages` WHERE `page_id` = :p_id';
-    $pdo_statement = $db->prepare($sql);
-    $pdo_statement->execute( [ ':p_id' => $v_id ] );
-    $current_page = $pdo_statement->fetchObject();
+    
 
     //pad naar de juist view
     $view = 'views/' . $current_page->template . '.php';
