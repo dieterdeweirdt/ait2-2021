@@ -36,7 +36,7 @@ $messages = $stmnt->fetchAll();
 
                 <div class="content">
                     <textarea name="tweet"></textarea>
-                    <input type="file" name="photo">
+                    <input type="file" name="photo" multiple>
                     <button type="submit">Tweet</button>
                 </div>
             </div>

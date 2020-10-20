@@ -14,7 +14,7 @@
         </div>
         <div class="tweet">
             <?php if($message->photo) : ?>
-                <img src="images/<?= $message->photo ?>">
+                <img src="/images/<?= $message->user_id ?>/<?= $message->photo ?>">
             <?php endif; ?>
             <?= $message->message ?>
         </div>

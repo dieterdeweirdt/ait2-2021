@@ -1,35 +1,55 @@
 <?php
 
+//connecteren met databank
 require '../includes/db.php';
 
-$file_name = '';
-if(isset($_FILES['photo']) && $_FILES['photo']['size'] > 0) 
-{
-    //bestandsnaam van het opgeladen betand
-    $file_name = $_FILES['photo']["name"];
-    //splits de bestandsnaam in de naam en extentie
-    $file_info = pathinfo($file_name);
-    //De plaats waar het bestand momenteel tijdelijk opgeladen is
-    $tmp_location = $_FILES['photo']["tmp_name"];
-    //De plaats waar
-    $new_location = '../images/' . $file_name;
-    move_uploaded_file($tmp_location, $new_location);
+$tweet = $_POST['tweet'] ?? '';
+$user_id = 55;
+$photo = '';
+$created_on = date("Y-m-d H:i:s");
+
+//controle doen op afbeelding en uploaden
+if( isset($_FILES['photo']) && $_FILES['photo']['size'] > 0 ) {
+
+    $upload_dir = '../images/' . $user_id . '/';
+    if( ! is_dir( $upload_dir ) ) {
+        mkdir( $upload_dir, 0777);
+    }
+
+    $tmp_location = $_FILES['photo']['tmp_name'];
+    $old_name = $_FILES['photo']['name'];
+    $file_type = $_FILES['photo']['type'];
+    $file_info = pathinfo($old_name);
+    $extension = $file_info['extension'];
+    
+    //controle doet op file_type voor je gaat uploaden
+    if( in_array($file_type, ['image/jpeg', 'image/png', 'image/gif']) ) {
+        $photo = uniqid() . '.' . $file_info['extension'];
+        $new_location = $upload_dir . $photo;
+
+        move_uploaded_file($tmp_location, $new_location);
+    }
+    else {
+        //bericht de gebruiker over een foutief bestand
+    }
+
 }
 
-$tweet = $_POST['tweet'] ?? '';
 
-$sql = 'INSERT INTO `message` (`user_id`, `message`, `photo`, `created_on`)
-VALUES (:user_id, :message, :photo, :created_on)';
+//Insert into query schrijven
+$sql = "INSERT INTO message 
+        (user_id, message, created_on, photo)
+        VALUES
+        (:user_id, :message, :created_on, :photo);";
 
-$stmnt = $db->prepare($sql);
-$stmnt->execute(
-    [
-        ':user_id' => 122,
-        ':message' => $tweet,
-        ':photo' => $file_name,
-        ':created_on' => date('Y-m-d H:i:s')
-    ]
-);
+//Uitvoeren
+$sth = $db->prepare($sql);
+$sth->execute([
+    ':user_id' => $user_id,
+    ':message' => $tweet,
+    ':created_on' => $created_on,
+    ':photo' => $photo,
+]);
 
-header('location: ../index.php');
-die();
+//terugkeren naar de index.php
+header( 'location: ../index.php' );
