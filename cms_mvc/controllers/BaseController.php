@@ -30,7 +30,8 @@ class BaseController {
             //default load a view with the same name as the method
             $view = $this->method;
         }
-
+        
+        //maakt variabelen van een array
         extract($this->viewParams);
         
         include BASE_DIR . "/views/" . $this->viewPath . "/$view.php";

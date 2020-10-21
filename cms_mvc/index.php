@@ -11,7 +11,7 @@ $controller = 'Home';
 $method = 'index';
 $params = [];
 
-if(isset($route[0])) {
+if(isset($route[0]) && $route[0] != '') {
     $controller = ucfirst(array_shift($route));
 
     if(isset($route[0])) {
@@ -25,4 +25,5 @@ require_once BASE_DIR . '/controllers/' . $controller . '.php';
 $controller_name = $controller . 'Controller';
 
 $controller = new $controller_name();
+
 $controller->{$method}($params);
