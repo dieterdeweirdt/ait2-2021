@@ -13,10 +13,10 @@ class User extends BaseModel {
 
     
 
-    private function getUserByEmail( string $email) {
+    public static function getUserByEmail( string $email) {
         global $db;
 
-        $sql = 'SELECT * FROM `' . $this->table . '` WHERE `email` = :email';
+        $sql = 'SELECT * FROM `users` WHERE `email` = :email';
         $pdo_statement = $db->prepare($sql);
         $pdo_statement->execute( [ ':email' => $email ] );
 

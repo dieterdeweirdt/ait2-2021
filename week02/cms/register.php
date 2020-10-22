@@ -4,7 +4,6 @@ include 'app.php';
 
 if( isset($_POST['register'] ) ) {
 
-    
     //TODO: validatie op velden... (bv lengte van wachtwoord)
     //TODO: Controle of email adres reeds gebruikt wordt
     $sql = 'SELECT COUNT(`email`) as total from `users` WHERE `email` = :email';
@@ -30,11 +29,13 @@ if( isset($_POST['register'] ) ) {
         ] );
 
         $user_id = $db->lastInsertId();
-        echo 'Gebruiker ' . $user_id . ' is aangemaakt';
+        
+        $_SESSION['user_id'] = $user_id;
+        header('location: index.php');
 
     }
 
-    //header('location: login.php');
+    
 }
 ?>
 <!DOCTYPE html>

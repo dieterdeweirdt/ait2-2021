@@ -1,6 +1,6 @@
 <?php
 include 'app.php';
-
+$message = '';
 if( isset($_POST['login'] ) ) {
 
     $user = User::getUserByEmail( $_POST['email'] );
@@ -12,13 +12,12 @@ if( isset($_POST['login'] ) ) {
         {
             $_SESSION['user_id'] = $user->user_id;
             header('location: index.php');
-
         }
         else {
-            echo 'E-mail en/of wachtwoord is verkeerd';
+            $message = 'E-mail en/of wachtwoord is verkeerd';
         }
     }else {
-        echo 'E-mail en/of wachtwoord is verkeerd';
+        $message = 'E-mail en/of wachtwoord is verkeerd';
     }
 }
 ?>
@@ -33,6 +32,9 @@ if( isset($_POST['login'] ) ) {
 <body>
 <div class="container">
     <h1>Login</h1>
+    <?php if($message) : ?>
+        <div class="alert"><?= $message; ?></div>
+    <?php endif; ?>
     <form method="POST">
         <p>
             <label for="email">E-mail</label>

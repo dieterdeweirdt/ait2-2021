@@ -4,33 +4,16 @@ setlocale(LC_ALL, 'nl_BE');
 require 'includes/db.php';
 
 $search = $_GET['search_string'] ?? '';
-$page = (int) $_GET['page'] ?? 1;
-if($page < 1) {
-    $page = 1;
-}
-$page_size = 25;
-$offset = $page_size*($page - 1);
-
-$sql = "SELECT COUNT(*) as 'total' from message;";
-$stmnt = $db->prepare($sql);
-$stmnt->execute( );
-$total = $stmnt->fetchColumn();
-
-$number_of_pages = ceil($total/$page_size);
 
 $sql = 'SELECT *
 FROM `message` 
 INNER JOIN `users` ON message.user_id = `users`.`user_id`
 WHERE `message`.`message` LIKE :search
 ORDER BY `created_on` DESC 
-LIMIT :offset,:page_size';
+LIMIT 25';
 
 $stmnt = $db->prepare($sql);
-$search_param = '%' . $search . '%';
-$stmnt->bindParam(':search', $search_param);
-$stmnt->bindParam(':offset', $offset, PDO::PARAM_INT);
-$stmnt->bindParam(':page_size', $page_size, PDO::PARAM_INT);
-$stmnt->execute( );
+$stmnt->execute( [':search' => '%' . $search . '%'] );
 $messages = $stmnt->fetchAll();
 
 ?><!DOCTYPE html>
@@ -71,12 +54,26 @@ $messages = $stmnt->fetchAll();
             include 'views/message.php';
         } ?>
 
-        <?php for( $i = 1; $i <= $number_of_pages; $i++) : ?>
-        <a href="index.php?page=<?= $i; ?>"><?= $i; ?></a>
-        <?php endfor; ?>
+        <button id="next">Volgende berichten</button>
     </div>
 
 </div>
+<script>
+    let current_page = 1;
+    document.getElementById('next').addEventListener('click', ()=>{
+        current_page++;
 
+        fetch('api/get_tweets.php?page=' + current_page, {
+            method: 'get'
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(function(err) {
+            // Error :(
+            console.log(err);
+        });
+    });
+
+</script>
 </body>
 </html>
