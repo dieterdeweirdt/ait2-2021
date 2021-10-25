@@ -1,3 +1,6 @@
+
+
+
 <?php 
 setlocale(LC_ALL, 'nl_BE');
 
@@ -80,3 +83,5 @@ $messages = $stmnt->fetchAll();
 
 </body>
 </html>
+
+

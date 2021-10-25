@@ -77,3 +77,15 @@ $messages = $stmnt->fetchAll();
 </script>
 </body>
 </html>
+
+<?php
+$prev_month = '';
+foreach($events as $event ) {
+    if($prev_month != date('M', $event['date']) ) {
+        echo date('M', $event['date']);
+        $prev_month = date('M', $event['date']);
+    }
+
+    ///de rest
+
+}
